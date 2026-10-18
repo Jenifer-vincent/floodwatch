@@ -1,0 +1,86 @@
+
+# ==============================
+# SECRETS AND ENVIRONMENT FILES
+# ==============================
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+service-account*.json
+
+# ==============================
+# PYTHON / FASTAPI
+# ==============================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.venv/
+venv/
+env/
+ENV/
+.python-version
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local runtime data and logs
+*.log
+uvicorn.pid
+.uvicorn.pid
+
+# ==============================
+# REACT / VITE / NODE
+# ==============================
+node_modules/
+dist/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# ==============================
+# R / RSTUDIO
+# ==============================
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+.Renviron
+
+# R package/library folders
+renv/library/
+packrat/lib/
+
+# ==============================
+# GENERATED MODELS AND LARGE DATA
+# ==============================
+# Trained models can be large or contain sensitive derived data
+*.rds
+*.RDS
+*.rda
+*.RData
+
+# Raw/private datasets
+data/raw/
+datasets/private/
+*.tif
+*.tiff
+*.dem
+*.kml
+
+# Generated temporary files
+tmp/
+temp/
+scratchpad/

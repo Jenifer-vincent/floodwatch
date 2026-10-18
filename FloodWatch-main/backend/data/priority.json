@@ -1,0 +1,115 @@
+{
+  "zones": [
+    {
+      "zoneId": "Z-1",
+      "zoneName": "Sector 4: Lower River Basin",
+      "score": 88.0,
+      "riskLevel": "high",
+      "reportCount": 0,
+      "factors": [
+        {
+          "name": "Flood Severity",
+          "value": 90
+        },
+        {
+          "name": "Infrastructure Risk",
+          "value": 80
+        },
+        {
+          "name": "Population Density",
+          "value": 95
+        },
+        {
+          "name": "Road Access",
+          "value": 85
+        }
+      ],
+      "recommendedAction": "Elevated monitoring. Pre-position emergency response units."
+    },
+    {
+      "zoneId": "Z-2",
+      "zoneName": "Sector 12: East Creek Outlet",
+      "score": 65.0,
+      "riskLevel": "medium",
+      "reportCount": 0,
+      "factors": [
+        {
+          "name": "Flood Severity",
+          "value": 70
+        },
+        {
+          "name": "Infrastructure Risk",
+          "value": 60
+        },
+        {
+          "name": "Population Density",
+          "value": 65
+        },
+        {
+          "name": "Road Access",
+          "value": 60
+        }
+      ],
+      "recommendedAction": "Active monitoring. Prepare contingency resources."
+    },
+    {
+      "zoneId": "Z-4",
+      "zoneName": "Sector 3: Downtown Plaza Gutterway",
+      "score": 52.0,
+      "riskLevel": "medium",
+      "reportCount": 0,
+      "factors": [
+        {
+          "name": "Flood Severity",
+          "value": 55
+        },
+        {
+          "name": "Infrastructure Risk",
+          "value": 60
+        },
+        {
+          "name": "Population Density",
+          "value": 50
+        },
+        {
+          "name": "Road Access",
+          "value": 45
+        }
+      ],
+      "recommendedAction": "Active monitoring. Prepare contingency resources."
+    },
+    {
+      "zoneId": "Z-3",
+      "zoneName": "Sector 9: West Hills Drainage Zone",
+      "score": 24.0,
+      "riskLevel": "low",
+      "reportCount": 0,
+      "factors": [
+        {
+          "name": "Flood Severity",
+          "value": 20
+        },
+        {
+          "name": "Infrastructure Risk",
+          "value": 25
+        },
+        {
+          "name": "Population Density",
+          "value": 30
+        },
+        {
+          "name": "Road Access",
+          "value": 35
+        }
+      ],
+      "recommendedAction": "Standard monitoring. No immediate action required."
+    }
+  ],
+  "config": {
+    "floodSeverityWeight": 1.2,
+    "infrastructureRiskWeight": 1.0,
+    "populationDensityWeight": 0.8,
+    "roadAccessWeight": 0.6
+  },
+  "calculatedAt": null
+}

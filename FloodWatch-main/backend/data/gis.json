@@ -1,0 +1,167 @@
+{
+  "zones": [
+    {
+      "id": "Z-1",
+      "name": "Sector 4: Lower River Basin",
+      "center": [
+        34.0622,
+        -118.2237
+      ],
+      "radius": 6000.0,
+      "riskLevel": "high",
+      "priorityScore": 88,
+      "activeReportsCount": 0,
+      "lastUpdated": "07:30"
+    },
+    {
+      "id": "Z-2",
+      "name": "Sector 12: East Creek Outlet",
+      "center": [
+        34.0754,
+        -118.2105
+      ],
+      "radius": 5000.0,
+      "riskLevel": "medium",
+      "priorityScore": 65,
+      "activeReportsCount": 0,
+      "lastUpdated": "06:45"
+    },
+    {
+      "id": "Z-3",
+      "name": "Sector 9: West Hills Drainage Zone",
+      "center": [
+        34.0382,
+        -118.271
+      ],
+      "radius": 4500.0,
+      "riskLevel": "low",
+      "priorityScore": 24,
+      "activeReportsCount": 0,
+      "lastUpdated": "05:00"
+    },
+    {
+      "id": "Z-4",
+      "name": "Sector 3: Downtown Plaza Gutterway",
+      "center": [
+        34.0482,
+        -118.258
+      ],
+      "radius": 4000.0,
+      "riskLevel": "medium",
+      "priorityScore": 52,
+      "activeReportsCount": 0,
+      "lastUpdated": "07:10"
+    }
+  ],
+  "roads": [
+    {
+      "name": "Highway 101 Underpass",
+      "path": [
+        [
+          34.0582,
+          -118.238
+        ],
+        [
+          34.054,
+          -118.242
+        ],
+        [
+          34.049,
+          -118.245
+        ]
+      ]
+    },
+    {
+      "name": "Alameda Interchange Sector",
+      "path": [
+        [
+          34.051,
+          -118.239
+        ],
+        [
+          34.053,
+          -118.2437
+        ],
+        [
+          34.056,
+          -118.249
+        ]
+      ]
+    }
+  ],
+  "hospitals": [
+    {
+      "name": "Downtown Emergency Hospital",
+      "lat": 34.0482,
+      "lng": -118.258
+    },
+    {
+      "name": "Civic Health Center",
+      "lat": 34.061,
+      "lng": -118.241
+    }
+  ],
+  "shelters": [
+    {
+      "name": "Sector 4 Civic Emergency Shelter",
+      "lat": 34.0682,
+      "lng": -118.221
+    },
+    {
+      "name": "Sector 3 Central Safe Haven",
+      "lat": 34.0382,
+      "lng": -118.271
+    }
+  ],
+  "rivers": [
+    {
+      "name": "LA River - Main Canal Outlet",
+      "path": [
+        [
+          34.075,
+          -118.22
+        ],
+        [
+          34.065,
+          -118.222
+        ],
+        [
+          34.055,
+          -118.228
+        ],
+        [
+          34.045,
+          -118.231
+        ]
+      ]
+    }
+  ],
+  "evacuationRoutes": [
+    {
+      "name": "West Evacuation Highway Lane",
+      "path": [
+        [
+          34.035,
+          -118.26
+        ],
+        [
+          34.028,
+          -118.275
+        ]
+      ]
+    },
+    {
+      "name": "North Basin Exit Route",
+      "path": [
+        [
+          34.065,
+          -118.228
+        ],
+        [
+          34.078,
+          -118.232
+        ]
+      ]
+    }
+  ]
+}

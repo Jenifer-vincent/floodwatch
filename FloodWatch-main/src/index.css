@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@media print {
+  /* Hide all elements on the body */
+  body * {
+    visibility: hidden;
+  }
+
+  /* Make only the report-confirmation container and its children visible */
+  #report-confirmation,
+  #report-confirmation * {
+    visibility: visible;
+  }
+
+  /* Position the print content correctly at the top left of the page */
+  #report-confirmation {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hide the buttons/action container inside the confirmation box */
+  #report-confirmation button,
+  #report-confirmation .pt-4.border-t.border-\[\#E2E4E1\] {
+    display: none !important;
+  }
+
+  /* Ensure page margins are clean and background is white */
+  @page {
+    margin: 1.5cm;
+  }
+}
+
+/* Visible Focus States for Accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #1B4B66;
+  outline-offset: 2px;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
