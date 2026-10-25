@@ -1,195 +1,110 @@
-# 🌊 Chennai District Flood Analysis — FloodWatch
+# FloodWatch: Chennai District Flood Analysis
 
-A GIS-based flood analysis application for Chennai District that visualizes flood hazard categories, spatial density patterns, historical event records, and surveyed flood-depth observations through an interactive map.
+FloodWatch is a prototype for exploring flood-related spatial data for Chennai District. It has an interactive map of validated GIS layers and a FastAPI backend for reports, alerts, notifications, funds, priority zones and analytics.
 
-## 📌 Project Overview
+> **Prototype.** This is an academic demonstration. It is not a live flood-warning system. See [Limitations](#limitations).
 
-FloodWatch brings together Geographic Information Systems (GIS), spatial data analysis, and experimental machine learning to support the exploration of flood-related information across Chennai District.
+Earlier project notes are kept in [README_PROJECT_HISTORY.md](README_PROJECT_HISTORY.md).
 
-The application provides an interactive interface for viewing flood-related datasets and understanding spatial patterns. It also includes an experimental flood-depth modelling component whose results require further validation before real-world use.
+## Repository layout
 
-## ✨ Key Features
-
-- **Interactive GIS Map:** Visualize Chennai flood-related spatial datasets.
-- **Flood Hazard Categories:** Explore the available hazard-category features.
-- **Density Analysis:** View spatial density cells and regional category information.
-- **Flood Event Records:** Access mapped flood-event records.
-- **Surveyed Flood Depths:** Display geographic flood-depth observation points.
-- **REST API:** Retrieve GIS datasets through FastAPI endpoints.
-- **Experimental ML Model:** Includes a linear regression model for flood-depth analysis, with documented verification results.
-
-## 🗺️ GIS Data Layers
-
-| Layer | API Endpoint | Feature Count |
-|---|---|---:|
-| Hazard Categories | `/gis/chennai/hazard-categories` | 5 |
-| Density Cells | `/gis/chennai/density-cells` | 15 |
-| Flood Event Records | `/gis/chennai/event-records` | 753 |
-| Surveyed Flood Depths | `/gis/chennai/survey-depths` | 192 |
-
-*These counts reflect the project's current packaged datasets.*
-
-## 🛠️ Technology Stack
-
-- **Frontend:** React, TypeScript, Vite
-- **Backend:** Python, FastAPI
-- **GIS and Spatial Data:** GeoJSON and R-based spatial analysis
-- **Machine Learning:** R and linear regression
-- **API Testing:** FastAPI endpoints and automated backend tests
-
-## 🏗️ Project Structure
-
-The packaged project is organized approximately as follows:
-
-```text
-FloodWatch/
-├── FloodWatch-main/
-│   ├── backend/
-│   │   ├── app/
-│   │   └── requirements.txt
-│   ├── src/
-│   ├── package.json
-│   └── README_RUN.md
-├── r-backend/
-│   └── outputs/
-│       ├── 15_final_hazard_categories.geojson
-│       ├── 15_final_density_region_category.geojson
-│       ├── 15_final_event_records.geojson
-│       └── 15_final_survey_depth_points.geojson
-└── docs/
-    └── Phase2A_Model_Verification_Report.md
+```
+.
+├── FloodWatch-main/            Application root (frontend and backend)
+│   ├── src/                    React frontend
+│   ├── backend/                FastAPI backend
+│   │   ├── app/                Routers, services, schemas, storage
+│   │   ├── tests/              pytest suite
+│   │   └── .env.example        Backend environment template (placeholders only)
+│   ├── .env.example            Frontend environment template
+│   └── package.json            Frontend scripts and dependencies
+├── r-backend/outputs/          Chennai GIS GeoJSON served by /gis/chennai/*
+├── render.yaml                 Render blueprint for the backend
+└── README_RUN.md               Earlier run notes
 ```
 
-The exact folder structure may vary depending on the repository version. Keep the `r-backend/outputs/` directory in the expected location because the API uses these generated spatial datasets.
+The GIS files live in `r-backend/outputs/` at the repository root. The backend reads them from there, so keep that folder in place.
 
-## ⚙️ Installation and Setup
+## Stack
 
-### Prerequisites
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, Vite 6, TypeScript, Tailwind CSS 4, Leaflet, Recharts |
+| Backend | FastAPI, Pydantic 2, PyJWT, bcrypt, JSON file storage |
+| GIS data | GeoJSON (WGS 84), served as-is by the API |
 
-Install the following software:
+## Local development
 
-- Python 3.10 or a compatible version supported by the backend dependencies
-- Node.js and npm
-- Git
+Requirements: Node.js 22 or newer, Python 3.12 or newer.
 
-### 1. Clone the repository
-
-```bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd <YOUR_REPOSITORY_FOLDER>
-```
-
-### 2. Start the backend
-
-Open a terminal in the project directory:
+**Backend** (from `FloodWatch-main/backend`)
 
 ```bash
-cd FloodWatch-main/backend
 python -m venv .venv
+# Windows: .venv\Scripts\activate     macOS/Linux: source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env                  # Windows: copy .env.example .env
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
-Activate the virtual environment on Windows PowerShell:
+API: http://localhost:8000. Interactive docs: http://localhost:8000/docs.
 
-```powershell
-.\.venv\Scripts\Activate.ps1
-```
-
-Install the dependencies:
+**Frontend** (from `FloodWatch-main`, in a second terminal)
 
 ```bash
-python -m pip install -r requirements.txt
-```
-
-Start the FastAPI server:
-
-```bash
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-```
-
-Verify the backend at:
-
-- Health endpoint: `http://127.0.0.1:8000/health`
-- API documentation: `http://127.0.0.1:8000/docs`
-
-If the repository layout or Python version differs, follow the included `README_RUN.md` and the backend dependency requirements.
-
-### 3. Start the frontend
-
-Open a second terminal and navigate to the frontend directory:
-
-```bash
-cd FloodWatch-main
 npm ci
 npm run dev
 ```
 
-Open the local URL printed by Vite in the terminal.
+App: http://localhost:3000. Without `VITE_API_BASE_URL`, the development build calls `http://localhost:8000`.
 
-Keep the backend and frontend terminals running while testing the application.
+**Checks**
 
-## 🧪 GIS API Endpoints
-
-The backend exposes the following GIS endpoints:
-
-```http
-GET /gis/chennai/hazard-categories
-GET /gis/chennai/density-cells
-GET /gis/chennai/event-records
-GET /gis/chennai/survey-depths
+```bash
+# from FloodWatch-main/backend
+python -m pytest
+# from FloodWatch-main
+npm run lint
+npm run build
 ```
 
-These endpoints provide the corresponding spatial datasets for the frontend map.
+## Configuration
 
-## 🤖 Machine Learning and Verification
+| Variable | Where | Purpose |
+|---|---|---|
+| `VITE_API_BASE_URL` | Frontend build | Public backend URL with no trailing slash. Production builds never fall back to localhost. |
+| `CORS_ORIGINS` | Backend | Comma-separated frontend origins allowed to call the API. Use the exact frontend URL in production. |
+| `JWT_SECRET` | Backend | Signing key for tokens. Use a long random value in production. Never commit it. |
+| `GIS_DATA_DIR` | Backend (optional) | Folder with the four Chennai GeoJSON files. Blank means `r-backend/outputs/`. |
+| `DATA_DIR`, `UPLOAD_DIR` | Backend (optional) | Runtime JSON data and uploaded images. |
 
-The project includes an experimental linear regression model for estimating flood depth from elevation and regional information.
+## API
 
-The independent verification reproduced the reported training metrics:
+| Endpoint | Returns | Expected |
+|---|---|---|
+| `GET /health` | Service status | 200 |
+| `GET /gis/chennai/hazard-categories` | Source hazard categories | 5 features |
+| `GET /gis/chennai/density-cells` | Region-by-category density cells | 15 features |
+| `GET /gis/chennai/event-records` | 2015 flood-event location records | 753 features |
+| `GET /gis/chennai/survey-depths` | Surveyed inundation depths (metres) | 192 features |
 
-| Metric | Result |
-|---|---:|
-| Training MAE | 0.0981 m |
-| Training RMSE | 0.1822 m |
-| Training R² | 0.0100 |
-| Mean regional CV MAE | 0.1014 m |
-| Mean regional CV RMSE | 0.1528 m |
-| Mean regional CV R² | -0.1796 |
+Other routes cover auth, reports, alerts, notifications, funds, priority and analytics. See `/docs` when the backend is running.
 
-### Interpretation
+## Deployment
 
-The model's training R² is close to zero, and the mean regional cross-validation R² is negative. These results indicate weak explanatory performance and poor generalization under the evaluated validation setup.
+**Backend on Render**
 
-The verification reproduced the reported metrics, but it does **not** establish that the model can reliably predict flood depth at new locations.
+- Use the `render.yaml` blueprint. It sets the service root to `FloodWatch-main/backend`, the start command, and the health check `/health`.
+- After the first deploy, set `CORS_ORIGINS` to the exact Vercel URL.
 
-## ⚠️ Limitations and Responsible Use
+**Frontend on Vercel**
 
-- Flood hazard categories represent the available analysis outputs and have not been independently validated as operational hazard classifications.
-- Forecast values displayed by the current application may be simulated demonstration data rather than live predictions.
-- The experimental regression model is not validated for operational flood forecasting or emergency decision-making.
-- Basemap availability may depend on the configured map tile provider.
-- Further data validation, model improvement, external testing, and operational evaluation are needed before real-world deployment.
+- Set the project **Root Directory** to `FloodWatch-main`. Vite is detected automatically.
+- Set `VITE_API_BASE_URL` to the Render URL, with no trailing slash, then redeploy.
 
-FloodWatch is intended for project demonstration, GIS exploration, and further research. It should not be used as the sole basis for evacuation, emergency response, or public-safety decisions.
+## Limitations
 
-## 🚀 Future Enhancements
-
-- Improve flood-depth model performance and validation.
-- Integrate reliable, time-stamped rainfall and water-level data.
-- Explore additional spatial and environmental features.
-- Improve map usability and responsive design.
-- Add monitoring, logging, and automated integration tests.
-- Evaluate forecasting capabilities against independent real-world observations.
-
-## 👩‍💻 Project Status
-
-FloodWatch includes an interactive GIS interface, packaged Chennai spatial datasets, and a FastAPI backend. The experimental ML component has undergone independent verification, with its limitations documented.
-
-
-
-## 📄 License
-
-No license has been specified yet. Add a `LICENSE` file before distributing the project under an open-source license.
-
----
-
-**FloodWatch — Exploring Chennai's flood-related spatial data through GIS and experimental machine learning.**
+- Storage is local JSON files. On Render's free tier the filesystem resets on each deploy, and the service sleeps when idle.
+- The frontend sign-in is demo mode. It does not call the backend's authentication endpoints.
+- Runtime data files under `backend/data/` and `backend/backups/` are currently tracked in Git. They contain no credentials, but they should be untracked before a production deployment.
+- Large GeoJSON files (about 13 MB each for two layers) increase memory use. This has not been measured on small hosting plans.
