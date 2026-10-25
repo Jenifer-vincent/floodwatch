@@ -14,6 +14,7 @@ from app.schemas.gis import (
     GISReportOut,
     GISZoneOut,
 )
+from app.core.config import settings
 from app.storage.json_storage import storage
 
 
@@ -196,9 +197,20 @@ def layers() -> list[GISLayerOut]:
 # Chennai flood GIS layers: validated read-only outputs of the R pipeline.
 # ---------------------------------------------------------------------------
 
-# backend/app/services/gis_service.py -> parents[4] is the folder that holds
-# both FloodWatch-main and r-backend (the layout produced by extracting the parts).
-CHENNAI_OUTPUT_DIR = Path(__file__).resolve().parents[4] / "r-backend" / "outputs"
+# Folder with the four Chennai GeoJSON files, chosen in this order:
+#   1. GIS_DATA_DIR environment variable (explicit override, e.g. on a host);
+#   2. r-backend/outputs at the repository root (checked in alongside FloodWatch-main).
+REPO_GIS_DIR = Path(__file__).resolve().parents[4] / "r-backend" / "outputs"
+
+
+def resolve_gis_output_dir(explicit: str, default: Path) -> Path:
+    """Return the explicit GIS folder if one is set, otherwise the default folder."""
+    if explicit.strip():
+        return Path(explicit.strip())
+    return default
+
+
+CHENNAI_OUTPUT_DIR = resolve_gis_output_dir(settings.gis_data_dir, REPO_GIS_DIR)
 
 CHENNAI_LAYER_FILES: dict[str, str] = {
     "hazard-categories": "15_final_hazard_categories.geojson",

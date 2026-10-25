@@ -45,6 +45,9 @@ class Settings(BaseSettings):
 
     allowed_upload_extensions: str = ".jpg,.jpeg,.png,.webp,.gif"
 
+    # Optional folder with the Chennai GIS GeoJSON files. Empty = r-backend/outputs beside the repo.
+    gis_data_dir: str = ""
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def _split_cors(cls, value: object) -> list[str] | str:

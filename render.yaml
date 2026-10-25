@@ -1,0 +1,21 @@
+# Render blueprint for the FastAPI backend. Secrets are generated or entered on the host,
+# never committed.
+services:
+  - type: web
+    name: floodwatch-api
+    runtime: python
+    rootDir: FloodWatch-main/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "false"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        sync: false

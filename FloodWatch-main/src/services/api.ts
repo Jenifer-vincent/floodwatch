@@ -15,7 +15,11 @@
 
 import { ApiError } from '../types';
 
-export const API_BASE_URL = 'http://localhost:8000';
+// Build-time setting. Vercel sets VITE_API_BASE_URL. The localhost default exists only in
+// development builds, so a production bundle never points at localhost.
+const CONFIGURED_API_URL = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/+$/, '');
+export const API_BASE_URL: string =
+  CONFIGURED_API_URL || (import.meta.env.DEV ? 'http://localhost:8000' : '');
 
 const TOKEN_KEY = 'floodwatch_token_v1';
 
