@@ -28,7 +28,6 @@ __pycache__/
 venv/
 env/
 ENV/
-.python-version
 
 .pytest_cache/
 .mypy_cache/

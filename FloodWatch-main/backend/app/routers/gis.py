@@ -130,7 +130,11 @@ def _chennai_layer_response(name: str) -> Response:
             "Chennai GIS layer is not available. The R outputs folder is missing or incomplete.",
             details={"layer": name},
         ) from exc
-    return Response(content=b'{"success":true,"data":' + raw + b"}", media_type="application/json")
+    return Response(
+        content=b'{"success":true,"data":' + raw + b"}",
+        media_type="application/json",
+        headers={"Cache-Control": "public, max-age=3600, s-maxage=86400"},
+    )
 
 
 @router.get(

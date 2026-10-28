@@ -198,19 +198,23 @@ def layers() -> list[GISLayerOut]:
 # ---------------------------------------------------------------------------
 
 # Folder with the four Chennai GeoJSON files, chosen in this order:
-#   1. GIS_DATA_DIR environment variable (explicit override, e.g. on a host);
-#   2. r-backend/outputs at the repository root (checked in alongside FloodWatch-main).
+#   1. GIS_DATA_DIR environment variable (explicit override);
+#   2. backend/gis_data/ (copies bundled with the backend, used on Vercel);
+#   3. r-backend/outputs at the repository root (local extraction layout).
+BUNDLED_GIS_DIR = Path(__file__).resolve().parents[2] / "gis_data"
 REPO_GIS_DIR = Path(__file__).resolve().parents[4] / "r-backend" / "outputs"
 
 
-def resolve_gis_output_dir(explicit: str, default: Path) -> Path:
-    """Return the explicit GIS folder if one is set, otherwise the default folder."""
+def resolve_gis_output_dir(explicit: str, bundled: Path, repo: Path) -> Path:
+    """Pick the GIS folder: explicit setting, then the bundled copy, then the repo outputs."""
     if explicit.strip():
         return Path(explicit.strip())
-    return default
+    if bundled.is_dir():
+        return bundled
+    return repo
 
 
-CHENNAI_OUTPUT_DIR = resolve_gis_output_dir(settings.gis_data_dir, REPO_GIS_DIR)
+CHENNAI_OUTPUT_DIR = resolve_gis_output_dir(settings.gis_data_dir, BUNDLED_GIS_DIR, REPO_GIS_DIR)
 
 CHENNAI_LAYER_FILES: dict[str, str] = {
     "hazard-categories": "15_final_hazard_categories.geojson",
