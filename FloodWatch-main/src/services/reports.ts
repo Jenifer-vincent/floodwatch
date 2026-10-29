@@ -15,7 +15,14 @@
  */
 
 import { FloodReport, UpdateReportRequest } from '../types';
-import { api, toApiError } from './api';
+import { api, API_BASE_URL, toApiError } from './api';
+
+// The backend returns paths such as /uploads/... relative to its own origin.
+// Prefix them with the API base URL so the browser requests them from the backend.
+function resolveMediaUrl(url: string | null | undefined): string | undefined {
+  if (!url) return undefined;
+  return url.startsWith('/') && API_BASE_URL ? `${API_BASE_URL}${url}` : url;
+}
 
 interface BackendReport {
   id: string;
@@ -54,7 +61,7 @@ function mapReport(r: BackendReport): FloodReport {
     status,
     reporterName: r.reporterName,
     phone: r.phone ?? '',
-    photoUrl: r.photoUrl ?? r.imageUrl ?? undefined,
+    photoUrl: resolveMediaUrl(r.photoUrl ?? r.imageUrl),
     waterLevelDepth: r.waterLevelDepth ?? undefined,
     adminNotes: r.adminNotes ?? r.resolutionNotes ?? undefined,
     latitude: r.latitude,
@@ -185,7 +192,7 @@ export const reportService = {
         formData,
         { isFormData: true }
       );
-      return data?.imageUrl ?? null;
+      return resolveMediaUrl(data?.imageUrl) ?? null;
     } catch (err) {
       throw new Error(toErrorMessage(err));
     }

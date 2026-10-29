@@ -41,7 +41,7 @@ class Settings(BaseSettings):
 
     data_dir: str = "data"
     upload_dir: str = "uploads"
-    max_upload_size_mb: int = 5
+    max_upload_size_mb: int = 4
 
     allowed_upload_extensions: str = ".jpg,.jpeg,.png,.webp,.gif"
 

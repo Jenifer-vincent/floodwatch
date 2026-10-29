@@ -293,10 +293,10 @@ const fileInputRef = useRef<HTMLInputElement>(null);
       return;
     }
 
-    // Validate size (matches the backend 5MB upload limit)
-    const MAX_SIZE = 5 * 1024 * 1024;
+    // Validate size (matches the backend 4 MiB upload limit)
+    const MAX_SIZE = 4 * 1024 * 1024;
     if (file.size > MAX_SIZE) {
-      setErrors([`The selected image exceeds the maximum allowed size of 5MB (your file is ${formatFileSize(file.size)}).`]);
+      setErrors([`The selected image exceeds the maximum allowed size of 4MB (your file is ${formatFileSize(file.size)}).`]);
       handleRemovePhoto();
       return;
     }
