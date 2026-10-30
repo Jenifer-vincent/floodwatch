@@ -91,96 +91,112 @@ The frontend requests GIS information from the backend, which serves the configu
 
 📂 Project Structure
 
-The exact directory structure may vary depending on the current repository layout.
+The repository root contains the app folder and the original R outputs:
 
-FloodWatch/
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── package.json
-│   └── vite.config.ts
-│
-├── backend/
-│   ├── main.py
-│   └── requirements.txt
-│
+```
+.
+├── FloodWatch-main/
+│   ├── src/                    React frontend
+│   ├── backend/
+│   │   ├── app/                FastAPI application
+│   │   ├── tests/              pytest suite
+│   │   └── gis_data/           Four Chennai GeoJSON layers (bundled copy)
+│   ├── .env.example            Frontend environment template
+│   └── package.json
 ├── r-backend/
-│   └── outputs/
-│       └── GIS data files
-│
-├── README.md
-└── .gitignore
+│   └── outputs/                Original R outputs (fallback for local runs)
+├── render.yaml                 Render blueprint for the backend
+└── README.md
+```
 
-Note: Adapt the directory names to match the actual repository before publishing this README.
+The four GIS files are bundled in `FloodWatch-main/backend/gis_data/`, so the backend does not depend on files outside its own folder. If that copy is missing, the backend falls back to `r-backend/outputs/` at the repository root.
 
 ⚙️ Getting Started
 
 Prerequisites
 
-Install the following before running the project:
-
-- Node.js and npm
-- Python 3.10 or later, subject to the backend's actual dependency requirements
 - Git
+- Node.js and npm (tested with Node.js 22 and npm 10; `package.json` does not pin a version)
+- Python 3.13 (pinned in `FloodWatch-main/backend/.python-version`)
 
 1. Clone the Repository
 
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd FloodWatch
+git clone https://github.com/Jenifer-vincent/floodwatch
+cd floodwatch
+
+The application code is in the `FloodWatch-main` folder.
 
 2. Start the Backend
 
-Navigate to the backend directory:
+Navigate to the backend folder:
 
-cd backend
+cd FloodWatch-main/backend
 
 Create and activate a virtual environment.
 
 Windows:
 
-python -m venv venv
-venv\Scripts\activate
+python -m venv .venv
+.venv\Scripts\activate
 
-Install the backend dependencies:
+macOS/Linux:
+
+python -m venv .venv
+source .venv/bin/activate
+
+Install the dependencies and create your local settings file:
 
 pip install -r requirements.txt
+cp .env.example .env
 
-Start the FastAPI server using the command appropriate for your backend entry point:
+On Windows, use `copy .env.example .env` instead of `cp`. Open `.env` and replace the `JWT_SECRET` placeholder with a long random value. The `.env` file stays on your machine and is ignored by Git.
 
-uvicorn main:app --reload --host 127.0.0.1 --port 8000
+Start the FastAPI server:
+
+python -m uvicorn app.main:app --reload --port 8000
 
 The backend should be available at:
 
-- API base URL: "http://127.0.0.1:8000"
-- Interactive API documentation: "http://127.0.0.1:8000/docs"
+- API base URL: http://127.0.0.1:8000
+- Interactive API documentation: http://127.0.0.1:8000/docs
 
 3. Start the Frontend
 
-Open a new terminal and navigate to the frontend directory:
+Open a new terminal in the `FloodWatch-main` folder (not the backend folder):
 
-cd frontend
-npm install
+npm ci
 npm run dev
 
-Open the local URL displayed by Vite in your terminal.
+Open http://localhost:3000. In development, the frontend calls the backend at http://localhost:8000 by default. Start the backend first.
 
-If the project uses port "3000", open "http://localhost:3000".
+4. Optional: Set a Different API URL
 
-4. Configure the API URL
+To point the frontend at another backend, copy `FloodWatch-main/.env.example` to `FloodWatch-main/.env.local` and set `VITE_API_BASE_URL`. Restart `npm run dev` after changing it. The backend allows requests from http://localhost:3000 by default, through `CORS_ORIGINS`.
 
-Set the frontend environment variable to point to your backend.
+5. Run the Checks
 
-Create or update the frontend ".env" file:
+From `FloodWatch-main/backend`:
 
-VITE_API_BASE_URL=http://127.0.0.1:8000
+python -m pytest
 
-Ensure the frontend and backend use matching API routes and that the backend allows requests from the frontend origin.
+From `FloodWatch-main`:
 
-5. Configure GIS Data
+npm run lint
+npm run build
 
-Make sure the validated GIS output files are available at the location expected by the backend.
+6. GIS Data
 
-For deployments, configure the GIS data directory using the project's supported "GIS_DATA_DIR" environment variable. Keep the GIS files available to the running backend rather than relying on files that exist only on a local development machine.
+The four GIS files are bundled in `FloodWatch-main/backend/gis_data/`, so no extra setup is needed for local runs. If that folder is missing, the backend falls back to `r-backend/outputs/` at the repository root.
+
+Environment variables
+
+| Variable | Where | Purpose |
+|---|---|---|
+| `VITE_API_BASE_URL` | Frontend build | Public backend URL with no trailing slash. Production builds never fall back to localhost. |
+| `CORS_ORIGINS` | Backend | Comma-separated frontend origins allowed to call the API. Use the exact frontend URL in production. |
+| `JWT_SECRET` | Backend | Signing key for tokens. Use a long random value in production. Never commit it. |
+| `GIS_DATA_DIR` | Backend (optional) | Folder with the four Chennai GeoJSON files. Blank means `backend/gis_data/`, then `r-backend/outputs/`. |
+| `DATA_DIR`, `UPLOAD_DIR` | Backend (optional) | Runtime JSON data and uploaded images. |
 
 🔌 API Integration
 
@@ -207,11 +223,50 @@ Before deploying:
 
 Important: Successful deployment requires the application code, environment variables, and GIS data files to be configured together.
 
+**Option A: Render**
+
+**Backend on Render**
+
+- Use the `render.yaml` blueprint. It sets the service root to `FloodWatch-main/backend`, the start command, and the health check `/health`.
+- After the first deploy, set `CORS_ORIGINS` to the exact Vercel URL.
+
+**Frontend on Vercel**
+
+- Set the project **Root Directory** to `FloodWatch-main`. Vite is detected automatically.
+- Set `VITE_API_BASE_URL` to the Render URL, with no trailing slash, then redeploy.
+
+**Option B: Vercel (free Hobby plan, for demonstration)**
+
+Use two Vercel projects, both built from the `deployment-prep` branch. The Hobby plan is for personal, non-commercial use. Python 3.13 is set by `FloodWatch-main/backend/.python-version`.
+
+1. **Backend project:** Root Directory `FloodWatch-main/backend`. Vercel detects FastAPI from `app/main.py`. Set these environment variables:
+   - `DATA_DIR` = `/tmp/floodwatch/data`
+   - `UPLOAD_DIR` = `/tmp/floodwatch/uploads`
+   - `ENVIRONMENT` = `production`, `DEBUG` = `false`
+   - `JWT_SECRET` = a long random value generated on your own machine
+2. **Frontend project:** Root Directory `FloodWatch-main`, Vite preset. Set `VITE_API_BASE_URL` to the backend's Vercel URL, with no trailing slash.
+3. Deploy the backend first, then the frontend. Then set `CORS_ORIGINS` on the backend to the exact frontend URL and redeploy the backend.
+4. Check `/health` and the four `/gis/chennai/*` endpoints on the backend URL.
+
+Only the bundled GIS files are guaranteed to be present on Vercel. See the limitations below for what is temporary.
+
 🧪 Testing and Validation
 
-The GIS integration has been validated against the project's available datasets. The integration work also passed the recorded production-build, TypeScript, and 89-test checks at the time of validation.
+The GIS integration has been validated against the project's available datasets. The integration work also passed the recorded production-build, TypeScript, and 93-test backend checks at the time of validation.
 
 Run the project's actual test commands before publishing a new release, since subsequent code changes may affect those results.
+
+⚠️ Limitations
+
+- Storage is local JSON files. On Render's free tier the filesystem resets on each deploy, and the service sleeps when idle.
+- **Temporary filesystem on Vercel:** users, login sessions, reports, alerts, notifications, funds, forecast and priority edits, uploaded photos and backups are written to `/tmp`. They are lost on cold starts and redeploys.
+- **Separate instances:** each Vercel instance has its own `/tmp`, so data created on one instance may not appear on another.
+- **Read-only GIS layers:** the four Chennai layers ship with the code and are not affected by these limits.
+- **Cold starts:** the first request after a quiet period is slow.
+- **Not production-ready.** This is a prototype for demonstration.
+- The frontend sign-in is demo mode. It does not call the backend's authentication endpoints.
+- Runtime data under `backend/data/` and `backend/backups/` is no longer tracked in Git. It is created at runtime and ignored by `backend/.gitignore`.
+- Large GeoJSON files (about 13 MB each for two layers) increase memory use. This has not been measured on small hosting plans.
 
 🔮 Future Enhancements
 

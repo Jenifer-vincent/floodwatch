@@ -77,3 +77,9 @@ def test_upload_rejects_spoofed_content_type(client, citizen_a):
     )
     assert response.status_code == 400
     assert "contents do not match" in response.json()["error"]["message"]
+
+
+def test_default_upload_limit_is_4_mib() -> None:
+    from app.core.config import Settings
+
+    assert Settings.model_fields["max_upload_size_mb"].default == 4
