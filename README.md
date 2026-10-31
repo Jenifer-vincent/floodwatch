@@ -285,7 +285,7 @@ FloodWatch aims to make Chennai's flood-related spatial information more accessi
 
 👩‍💻 Author
 
-Jenifer
+Jenifer and 
 Bhuwanenthiran 
 BCA — Computer Applications
 
